@@ -14,7 +14,7 @@ import { ActiveModal, User } from './types';
 function App() {
   const [selectedChatId, setSelectedChatId] = useState(mockChats[0].id);
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
-  const [user, setUser] = useState(currentUser);
+  const [user, setUser] = useState<User>(currentUser);
 
   const selectedChat = mockChats.find((chat) => chat.id === selectedChatId);
   const selectedContact: User = {
@@ -32,18 +32,25 @@ function App() {
   };
 
   const handleUpdateProfile = (updates: Partial<User>) => {
-    setUser({ ...user, ...updates });
+    setUser((prevUser) => ({
+      ...prevUser,
+      ...updates,
+    }));
   };
 
   const handleUpdateSettings = (updates: Partial<User['settings']>) => {
-    setUser({
-      ...user,
-      settings: { ...user.settings, ...updates },
-    });
+    setUser((prevUser) => ({
+      ...prevUser,
+      settings: {
+        ...prevUser.settings,
+        ...updates,
+      },
+    }));
   };
 
   const handleLogout = () => {
     console.log('Logging out...');
+    // Implement logout logic here
   };
 
   return (
@@ -55,6 +62,8 @@ function App() {
         onChatSelect={setSelectedChatId}
         onProfileClick={() => setActiveModal('profile')}
         onSettingsClick={() => setActiveModal('settings')}
+        onUpdateSettings={handleUpdateSettings}
+        onLogout={handleLogout}
       />
 
       <div className="flex-1 flex flex-col">

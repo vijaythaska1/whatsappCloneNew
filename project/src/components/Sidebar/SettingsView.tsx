@@ -10,6 +10,8 @@ import {
   LogOut,
   ChevronRight,
 } from 'lucide-react';
+import { PrivacySettings } from '../Settings/PrivacySettings';
+import { HelpSettings } from '../Settings/HelpSettings';
 
 interface SettingsViewProps {
   user: User;
@@ -24,6 +26,31 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onProfileClick,
   onLogout,
 }) => {
+  const [activeSection, setActiveSection] = React.useState<'main' | 'privacy' | 'help'>('main');
+
+  const handlePrivacyUpdate = (updates: Partial<User['settings']['privacy']>) => {
+    onUpdateSettings({
+      privacy: { ...user.settings.privacy, ...updates },
+    });
+  };
+
+  if (activeSection === 'privacy') {
+    return (
+      <PrivacySettings
+        settings={user.settings.privacy}
+        onUpdatePrivacy={handlePrivacyUpdate}
+      />
+    );
+  }
+
+  if (activeSection === 'help') {
+    return (
+      <HelpSettings
+        onBack={() => setActiveSection('main')}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div className="p-4 bg-[#008069] text-white">
@@ -51,71 +78,85 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         {/* Settings Sections */}
         <div className="p-4 space-y-4">
           {/* Notifications */}
-          <div className="flex items-center justify-between p-3 hover:bg-gray-100 rounded-lg">
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center mr-4">
-                <Bell className="w-5 h-5 text-white" />
+          <div className="p-4 hover:bg-gray-100 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Bell className="w-6 h-6 mr-4 text-gray-600" />
+                <div>
+                  <h3 className="font-medium">Notifications</h3>
+                  <p className="text-sm text-gray-500">Message and group notifications</p>
+                </div>
               </div>
-              <span>Notifications</span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={user.settings.notifications}
+                  onChange={(e) =>
+                    onUpdateSettings({ notifications: e.target.checked })
+                  }
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#008069]"></div>
+              </label>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={user.settings.notifications}
-                onChange={(e) =>
-                  onUpdateSettings({ notifications: e.target.checked })
-                }
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-            </label>
           </div>
 
           {/* Privacy */}
-          <div className="flex items-center p-3 hover:bg-gray-100 rounded-lg">
-            <div className="w-10 h-10 rounded-full bg-[#34B7F1] flex items-center justify-center mr-4">
-              <Lock className="w-5 h-5 text-white" />
+          <div
+            onClick={() => setActiveSection('privacy')}
+            className="flex items-center p-4 hover:bg-gray-100 rounded-lg cursor-pointer"
+          >
+            <Lock className="w-6 h-6 mr-4 text-gray-600" />
+            <div className="flex-1">
+              <h3 className="font-medium">Privacy</h3>
+              <p className="text-sm text-gray-500">Last seen, profile photo, about</p>
             </div>
-            <span>Privacy</span>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
 
           {/* Theme */}
-          <div className="flex items-center justify-between p-3 hover:bg-gray-100 rounded-lg">
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-[#8E44AD] flex items-center justify-center mr-4">
-                <Palette className="w-5 h-5 text-white" />
+          <div className="p-4 hover:bg-gray-100 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Palette className="w-6 h-6 mr-4 text-gray-600" />
+                <div>
+                  <h3 className="font-medium">Theme</h3>
+                  <p className="text-sm text-gray-500">Dark mode, chat wallpaper</p>
+                </div>
               </div>
-              <span>Dark Mode</span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={user.settings.darkMode}
+                  onChange={(e) =>
+                    onUpdateSettings({ darkMode: e.target.checked })
+                  }
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#008069]"></div>
+              </label>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={user.settings.darkMode}
-                onChange={(e) =>
-                  onUpdateSettings({ darkMode: e.target.checked })
-                }
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-            </label>
           </div>
 
           {/* Help */}
-          <div className="flex items-center p-3 hover:bg-gray-100 rounded-lg">
-            <div className="w-10 h-10 rounded-full bg-[#F1C40F] flex items-center justify-center mr-4">
-              <HelpCircle className="w-5 h-5 text-white" />
+          <div
+            onClick={() => setActiveSection('help')}
+            className="flex items-center p-4 hover:bg-gray-100 rounded-lg cursor-pointer"
+          >
+            <HelpCircle className="w-6 h-6 mr-4 text-gray-600" />
+            <div className="flex-1">
+              <h3 className="font-medium">Help</h3>
+              <p className="text-sm text-gray-500">FAQ, contact us, privacy policy</p>
             </div>
-            <span>Help</span>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
 
           {/* Logout */}
           <button
             onClick={onLogout}
-            className="flex items-center w-full p-3 hover:bg-gray-100 rounded-lg text-red-500"
+            className="w-full flex items-center p-4 hover:bg-gray-100 rounded-lg text-red-500"
           >
-            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-4">
-              <LogOut className="w-5 h-5 text-red-500" />
-            </div>
+            <LogOut className="w-6 h-6 mr-4" />
             <span>Log out</span>
           </button>
         </div>
