@@ -1,6 +1,5 @@
-node_modules
-dist
-utils/serviceAccountKey.json
+/node_modules
+/dist
 .env
 
 
