@@ -6,6 +6,22 @@ interface AboutViewProps {
 }
 
 export const AboutView: React.FC<AboutViewProps> = ({ onBack }) => {
+  const handleLinkClick = (linkType: string) => {
+    switch (linkType) {
+      case 'terms':
+        window.open('https://www.whatsapp.com/legal/terms-of-service', '_blank');
+        break;
+      case 'privacy':
+        window.open('https://www.whatsapp.com/legal/privacy-policy', '_blank');
+        break;
+      case 'licenses':
+        window.open('https://www.whatsapp.com/legal/licenses', '_blank');
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div className="flex flex-col h-full bg-white">
       <div className="p-4 bg-[#008069] text-white flex items-center gap-3">
@@ -65,9 +81,24 @@ export const AboutView: React.FC<AboutViewProps> = ({ onBack }) => {
           <div className="border-t pt-4">
             <h4 className="font-medium mb-2">Legal</h4>
             <div className="space-y-2">
-              <a href="#" className="block text-[#008069] hover:underline">Terms of Service</a>
-              <a href="#" className="block text-[#008069] hover:underline">Privacy Policy</a>
-              <a href="#" className="block text-[#008069] hover:underline">Licenses</a>
+              <button
+                onClick={() => handleLinkClick('terms')}
+                className="block text-[#008069] hover:underline w-full text-left"
+              >
+                Terms of Service
+              </button>
+              <button
+                onClick={() => handleLinkClick('privacy')}
+                className="block text-[#008069] hover:underline w-full text-left"
+              >
+                Privacy Policy
+              </button>
+              <button
+                onClick={() => handleLinkClick('licenses')}
+                className="block text-[#008069] hover:underline w-full text-left"
+              >
+                Licenses
+              </button>
             </div>
           </div>
 

@@ -59,6 +59,19 @@ export const HelpSettings: React.FC<HelpSettingsProps> = ({ onBack }) => {
     }
   };
 
+  const handleExternalLink = (linkType: string) => {
+    switch (linkType) {
+      case 'blog':
+        window.open('https://blog.whatsapp.com/', '_blank');
+        break;
+      case 'whats-new':
+        window.open('https://www.whatsapp.com/features', '_blank');
+        break;
+      default:
+        break;
+    }
+  };
+
   if (activeSection) {
     const section = helpSections.find((s) => s.id === activeSection);
     if (section) {
@@ -127,26 +140,18 @@ export const HelpSettings: React.FC<HelpSettingsProps> = ({ onBack }) => {
 
         {/* Additional Resources */}
         <div className="p-4 space-y-2">
-          <a
-            href="#"
-            className="block text-[#008069] hover:underline text-sm"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log('Open WhatsApp blog');
-            }}
+          <button
+            className="block text-[#008069] hover:underline text-sm w-full text-left"
+            onClick={() => handleExternalLink('blog')}
           >
             Visit WhatsApp Blog
-          </a>
-          <a
-            href="#"
-            className="block text-[#008069] hover:underline text-sm"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log('Open WhatsApp features');
-            }}
+          </button>
+          <button
+            className="block text-[#008069] hover:underline text-sm w-full text-left"
+            onClick={() => handleExternalLink('whats-new')}
           >
             What's New
-          </a>
+          </button>
         </div>
       </div>
     </div>

@@ -1,21 +1,33 @@
 import React from 'react';
-import { Lock, Eye, Image, MessageSquare, Bell } from 'lucide-react';
+import { Lock, Eye, Image, MessageSquare, Bell, ArrowLeft } from 'lucide-react';
 import { User } from '../../types';
 
 interface PrivacySettingsProps {
   settings: User['settings']['privacy'];
   onUpdatePrivacy: (updates: Partial<User['settings']['privacy']>) => void;
+  onBack: () => void;
+  onViewPrivacyPolicy: () => void;
 }
 
 export const PrivacySettings: React.FC<PrivacySettingsProps> = ({
   settings,
   onUpdatePrivacy,
+  onBack,
+  onViewPrivacyPolicy,
 }) => {
   return (
     <div className="flex flex-col h-full bg-white">
       <div className="p-4 bg-[#008069] text-white flex items-center gap-3">
-        <Lock className="w-6 h-6" />
-        <h2 className="text-xl font-semibold">Privacy Settings</h2>
+        <button 
+          onClick={onBack} 
+          className="p-2 hover:bg-[#017561] rounded-full transition-colors"
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
+        <div className="flex items-center gap-3">
+          <Lock className="w-6 h-6" />
+          <h2 className="text-xl font-semibold">Privacy Settings</h2>
+        </div>
       </div>
 
       <div className="p-4 space-y-6">
@@ -105,16 +117,12 @@ export const PrivacySettings: React.FC<PrivacySettingsProps> = ({
 
         {/* Privacy Policy Link */}
         <div className="pt-4 border-t">
-          <a
-            href="#"
-            className="text-[#008069] hover:underline text-sm"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log('Open privacy policy');
-            }}
+          <button
+            onClick={onViewPrivacyPolicy}
+            className="text-[#008069] hover:underline text-sm font-medium transition-colors hover:text-[#006d5b]"
           >
             Read our Privacy Policy
-          </a>
+          </button>
         </div>
       </div>
     </div>
