@@ -13,7 +13,6 @@ try {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
     });
-    
 }
 catch (error) {
     console.error('Failed to initialize Firebase Admin:', error);
