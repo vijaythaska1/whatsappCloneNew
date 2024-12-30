@@ -5,7 +5,7 @@ import path from 'path';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import admin from 'firebase-admin';
 import dotenv from 'dotenv';
-import UserModel from "../models/userModel.js";
+import UserModel from "../models/users/users.model.js";
 // import serviceAccount from "../config/serviceAccountKey.json" assert { type: "json" };
 import { ObjectSchema } from 'joi';
 
@@ -56,16 +56,16 @@ declare global {
 }
 
 // Initialize Firebase Admin
-try {
-    // const serviceAccount = require('../config/serviceAccountKey.json');
-    const serviceAccount = JSON.parse(fs.readFileSync("./src/config/serviceAccountKey.json", "utf-8"));
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount as any),
-    });
-} catch (error) {
-    console.error('Failed to initialize Firebase Admin:', error);
-    process.exit(1);
-}
+// try {
+//     // const serviceAccount = require('../config/serviceAccountKey.json');
+//     const serviceAccount = JSON.parse(fs.readFileSync("./src/config/serviceAccountKey.json", "utf-8"));
+//     admin.initializeApp({
+//         credential: admin.credential.cert(serviceAccount as any),
+//     });
+// } catch (error) {
+//     console.error('Failed to initialize Firebase Admin:', error);
+//     process.exit(1);
+// }
 
 // Constants
 const SUPPORTED_MIME_TYPES: Record<string, string> = {
@@ -240,22 +240,17 @@ export default {
         try {
             const authHeader = req.headers.authorization;
             const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
-
             if (!token) {
                 return void res.status(401).json(createResponse(false, 'No token provided'));
             }
-
             if (!process.env.SECRET_KEY) {
                 throw new Error('JWT secret key not configured');
             }
-
             const decoded = jwt.verify(token, process.env.SECRET_KEY) as JwtPayload & { _id: string };
             const user = await UserModel.findById(decoded._id);
-
             if (!user) {
                 return void res.status(401).json(createResponse(false, 'Invalid token'));
             }
-
             req.user = user;
             next();
         } catch (error) {
@@ -264,32 +259,32 @@ export default {
         }
     },
 
-    sendPushNotification: async (payload: NotificationPayload): Promise<void> => {
-        try {
-            if (!payload.token) {
-                throw new Error('Device token is required');
-            }
+    // sendPushNotification: async (payload: NotificationPayload): Promise<void> => {
+    //     try {
+    //         if (!payload.token) {
+    //             throw new Error('Device token is required');
+    //         }
 
-            const message = {
-                token: payload.token,
-                notification: {
-                    title: 'Clipa',
-                    body: payload.message,
-                },
-                data: {
-                    title: 'Clipa',
-                    message: payload.message,
-                    notificationType: payload.type,
-                    sendername: payload.sendername,
-                    senderId: payload.senderId,
-                    receiverId: payload.receiverId,
-                },
-            };
+    //         const message = {
+    //             token: payload.token,
+    //             notification: {
+    //                 title: 'Clipa',
+    //                 body: payload.message,
+    //             },
+    //             data: {
+    //                 title: 'Clipa',
+    //                 message: payload.message,
+    //                 notificationType: payload.type,
+    //                 sendername: payload.sendername,
+    //                 senderId: payload.senderId,
+    //                 receiverId: payload.receiverId,
+    //             },
+    //         };
 
-            await admin.messaging().send(message);
-        } catch (error) {
-            console.error('Push notification error:', error);
-            throw error;
-        }
-    },
+    //         await admin.messaging().send(message);
+    //     } catch (error) {
+    //         console.error('Push notification error:', error);
+    //         throw error;
+    //     }
+    // },
 };

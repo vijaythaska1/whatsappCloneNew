@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import { NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import userModel from "../models/userModel.js";
+import userModel from "../models/users/users.model.js";
 
 interface CustomSocket extends Socket {
     userData?: any;

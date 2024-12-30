@@ -1,31 +1,31 @@
 import mongoose, { Schema, Document } from 'mongoose';
-
-interface IUser extends Document {
-  role: number;
-  name: string;
-  email: string;
-  age: number;
-  location: {
-    type: string;
-    coordinates: number[];
-  };
-  address: string;
-  password: string;
-  status: number;
-  countryCode: string;
-  phoneNumber: string;
-  otp: number;
-  verify: number;
-  bio: string;
-  isDeleted: number;
-  image: string;
-  authToken: string;
-  deviceToken: string;
-  deviceType: number;
-  notificationStatus: number;
-  socketId: string;
-  isOnline: number;
-}
+import { IUser } from "./users.interface.js";
+// interface IUser extends Document {
+//   role: number;
+//   name: string;
+//   email: string;
+//   age: number;
+//   location: {
+//     type: string;
+//     coordinates: number[];
+//   };
+//   address: string;
+//   password: string;
+//   status: number;
+//   countryCode: string;
+//   phoneNumber: string;
+//   otp: number;
+//   verify: number;
+//   bio: string;
+//   isDeleted: number;
+//   image: string;
+//   authToken: string;
+//   deviceToken: string;
+//   deviceType: number;
+//   notificationStatus: number;
+//   socketId: string;
+//   isOnline: number;
+// }
 
 // User Schema
 const UserSchema: Schema<IUser> = new Schema({
@@ -163,6 +163,6 @@ UserSchema.index({ email: 1 }, { unique: true });
 UserSchema.index({ phoneNumber: 1 }, { unique: true });
 UserSchema.index({ location: '2dsphere' });
 
-const UserModel = mongoose.model<IUser>('User', UserSchema);
+const UserModel = mongoose.model<IUser>('users', UserSchema);
 
 export default UserModel;
